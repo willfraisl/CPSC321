@@ -83,15 +83,15 @@ SELECT * FROM border;
 -- 1
 /* The goal is to find provinces that contain cities that have a population greater than 1000
 people and display their name and area. */
-SELECT DISTINCT p.name, p.area
-FROM province p JOIN city c ON (c.province = p.name)
+SELECT DISTINCT p.province_name, p.area
+FROM province p JOIN city c ON (c.province = p.province_name)
 WHERE c.population > 1000;
 
 -- 2
 /* Find 2 cities with the same name in different countries and show the city with the
 greater population along with its country. */
-SELECT c1.name, c1.country
-FROM city c1 JOIN city c2 USING (name)
+SELECT c1.city_name, c1.country
+FROM city c1 JOIN city c2 USING (city_name)
 WHERE c1.country != c2.country AND c1.population > c2.population;
 
 -- 3
