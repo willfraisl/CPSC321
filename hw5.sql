@@ -1,4 +1,6 @@
-
+/*
+ * Will Fraisl
+ */
 
 -- dropping tables
 DROP TABLE IF EXISTS border;
@@ -58,9 +60,11 @@ INSERT INTO city VALUES
     ('San Jose','California','US',1025000),
     ('San Francisco','California','US',870887),
     ('Los Angeles','California','US',3976000),
+    ('Kenmore','Washington','US',20460),
     ('Seattle','Washington','US',704352),
     ('Guadalajara','Jalisco','MEX',1495000),
     ('Toronto','Ontario','CAN',2809000),
+    ('Kenmore','Ontario','CAN',501),
     ('Montreal','Quebec','CAN',1741000);
 
 INSERT INTO border VALUES
@@ -75,6 +79,20 @@ SELECT * FROM city;
 SELECT * FROM border;
 
 -- queries
+
+-- 1
+/* The goal is to find provinces that contain cities that have a population greater than 1000
+people and display their name and area. */
+SELECT DISTINCT p.name, p.area
+FROM province p JOIN city c ON (c.province = p.name)
+WHERE c.population > 1000;
+
+-- 2
+/* Find 2 cities with the same name in different countries and show the city with the
+greater population along with its country. */
+SELECT c1.name, c1.country
+FROM city c1 JOIN city c2 USING (name)
+WHERE c1.country != c2.country AND c1.population > c2.population;
 
 -- 3
 /* Write an SQL query that finds the GDP, inflation, and total population of each country. Let a
