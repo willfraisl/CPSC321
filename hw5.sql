@@ -3,6 +3,7 @@
  */
 
 -- dropping tables
+DROP VIEW IF EXISTS assoc_borders;
 DROP TABLE IF EXISTS border;
 DROP TABLE IF EXISTS city;
 DROP TABLE IF EXISTS province;
@@ -60,6 +61,8 @@ INSERT INTO city VALUES
     ('San Jose','California','US',1025000),
     ('San Francisco','California','US',870887),
     ('Los Angeles','California','US',3976000),
+    ('Saratoga','California','US',30767),
+    ('Los Gatos','California','US',30545),
     ('Kenmore','Washington','US',20460),
     ('Seattle','Washington','US',704352),
     ('Guadalajara','Jalisco','MEX',1495000),
@@ -144,8 +147,14 @@ UNION
 (SELECT country2, country1, border_length
 FROM border);
 
+SELECT * FROM assoc_borders;
+
 -- 9
 /* Write an SQL query that finds for each country, the average GDP and inflation of each of its
 bordering countries. Your query should return the countries ordered by (from lowest to highest)
 the average GDP followed by the average inflation of their bordering countries. Note you should
 use your assoc borders relation in your query. */
+SELECT a.country1, AVG(c.gdp), AVG(c.inflation)
+FROM assoc_borders a JOIN country c ON(a.country2 = c.code)
+GROUP BY a.country1
+ORDER BY AVG(c.gdp), AVG(c.inflation);
