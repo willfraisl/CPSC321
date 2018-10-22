@@ -89,9 +89,13 @@ FROM category c, film_category fc, film f
 WHERE c.category_id = fc.category_id
     AND fc.film_id = f.film_id
     AND f.rating = 'R'
-    -- subquery
 GROUP BY c.category_id
-ORDER BY COUNT(*) DESC;
+HAVING COUNT(*) >= ALL(SELECT COUNT(*)
+                        FROM category c, film_category fc, film f
+                        WHERE c.category_id = fc.category_id
+                            AND fc.film_id = f.film_id
+                            AND f.rating = 'R'
+                        GROUP BY c.category_id);
 
 -- 7
 /* Find the ’G’ rated film (or films if there is a tie) that have been rented the most number of
@@ -103,9 +107,13 @@ FROM film f, inventory i, rental r
 WHERE f.film_id = i.film_id
     AND i.inventory_id = r.inventory_id
     AND f.rating = 'G'
-    -- subquery
 GROUP BY f.film_id
-ORDER BY COUNT(*) DESC;
+HAVING COUNT(*) >= ALL(SELECT COUNT(*)
+                        FROM film f, inventory i, rental r
+                        WHERE f.film_id = i.film_id
+                            AND i.inventory_id = r.inventory_id
+                            AND f.rating = 'G'
+                        GROUP BY f.film_id);
 
 -- 8
 /* Find the store (or stores if there is a tie) that have the most rentals. You cannot use limit and
@@ -115,9 +123,12 @@ SELECT s.store_id, COUNT(*)
 FROM store s, inventory i, rental r
 WHERE s.store_id = i.store_id
     AND i.inventory_id = r.inventory_id
-    -- subquery
 GROUP BY s.store_id
-ORDER BY COUNT(*);
+HAVING COUNT(*) >= ALL(SELECT COUNT(*)
+                        FROM store s, inventory i, rental r
+                        WHERE s.store_id = i.store_id
+                            AND i.inventory_id = r.inventory_id
+                        GROUP BY s.store_id);
 
 -- 9
 /* For each staff member, find the movies they rented for 0.99 and the total number of times
@@ -126,6 +137,14 @@ each staff member, the title of each movie, and the number of times each movie w
 by the staff member. The results should be ordered by staff member last name followed by
 first name. For each staff member, the movies that they have rented should be ordered from
 most rented to least rented. */
+SELECT s.first_name, s.last_name, f.title, COUNT(*)
+FROM staff s, rental r, inventory i, film f
+WHERE s.staff_id = r.staff_id
+    AND r.inventory_id = i.inventory_id
+    AND i.film_id = f.film_id
+    AND f.rental_rate = 0.99
+GROUP BY f.film_id
+ORDER BY s.last_name, s.first_name, COUNT(*) DESC;
 
 -- 10
 /* Come up with your own “interesting” query over the database schema. Your query should
