@@ -143,10 +143,27 @@ WHERE s.staff_id = r.staff_id
     AND r.inventory_id = i.inventory_id
     AND i.film_id = f.film_id
     AND f.rental_rate = 0.99
-GROUP BY f.film_id
-ORDER BY s.last_name, s.first_name, COUNT(*) DESC;
+GROUP BY s.staff_id, f.film_id
+ORDER BY s.last_name, s.first_name, COUNT(*) DESC
+LIMIT 10;
 
 -- 10
 /* Come up with your own “interesting” query over the database schema. Your query should
 involve group by, having, and (necessary) subqueries. Give your query, the query result, and
-explain in plain English what the purpose of the query is. */
+explain in plain English what the purpose of the query is.
+
+Get all the actor that was in the most movies that cost more than $3 to rent,
+Return the actors first and last name, and the number
+of movies that they were in */
+SELECT a.first_name, a.last_name, COUNT(*)
+FROM film f, film_actor fa, actor a
+WHERE f.film_id = fa.film_id
+    AND fa.actor_id = a.actor_id
+    AND f.rental_rate > 3
+GROUP BY a.actor_id
+HAVING COUNT(*) >= ALL(SELECT COUNT(*)
+                    FROM film f, film_actor fa, actor a
+                    WHERE f.film_id = fa.film_id
+                        AND fa.actor_id = a.actor_id
+                        AND f.rental_rate > 3
+                    GROUP BY a.actor_id);
