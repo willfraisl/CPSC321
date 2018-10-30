@@ -32,12 +32,13 @@ HAVING f.film_id NOT IN (SELECT f.film_id
                             FROM film f JOIN inventory i ON (f.film_id = i.film_id)
                                 JOIN store s ON (i.store_id = s.store_id));
                                 */
-
+/*
 SELECT f.title
 FROM film f CROSS JOIN store s
 GROUP BY f.film_id
 HAVING f.film_id NOT IN (SELECT f.film_id
                             )
+                            */
 
 -- 3
 /* Write an SQL query to find the percentage of ‘G’-rated movies each actor/actress has acted
@@ -45,12 +46,14 @@ in. Your query should return the id, first name, and last name of each actor/act
 corresponding percentage. Your results should be sort actors/actresses from highest to lowest
 corresonding percentage. For this query, you only need to consider actors/actresses that have
 acted in at least one ‘G’-rated movie. */
+/*
 SELECT a.actor_id, a.first_name, a.last_name, COUNT(*)
 FROM actor a JOIN film_actor fa ON (a.actor_id = fa.actor_id)
     JOIN film f ON (fa.film_id = f.film_id)
 WHERE f.rating = 'G'
 GROUP BY a.actor_id
 HAVING ;
+*/
 
 -- 4
 /* Write an SQL query using an outer join to find all of the film titles that do not have any
@@ -84,7 +87,7 @@ COUNT(columname) only counts the number of non-NULL values in the values of colu
 SELECT f.film_id, COUNT(*)
 FROM film f JOIN film_actor fa ON (f.film_id = fa.film_id)
 GROUP BY f.film_id
-ORDER BY COUNT(*) DESC;
+LIMIT 10;
 
 /* This query returns 997 rows and there are 1000 movies total so that means
 that there are 3 movies with no actors. This is the same result as the query
